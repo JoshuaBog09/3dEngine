@@ -5,6 +5,7 @@ import pygame as pg
 
 from camera import Camera
 from assets.cube import Cube
+from assets.sphere import Sphere
 
 WHITE = (244, 243, 239)
 BLACK = (16, 16, 16)
@@ -109,7 +110,7 @@ def drawcube(cube_obj, coordinate_camera = np.array([0,0,0]), orientation_camera
     """    
 
     draw_scale = 2
-    draw_depth = 100
+    draw_depth = 50
 
 
     def transform(coordinates_cube, coordinate_camera, orientation_camera):
@@ -122,8 +123,8 @@ def drawcube(cube_obj, coordinate_camera = np.array([0,0,0]), orientation_camera
 
 
     def project(corner_node):
-        x = ((WIDTH // draw_scale) * corner_node[0]/corner_node[1]) + WIDTH // draw_scale
-        z = - ((HEIGHT // draw_scale) * corner_node[2]/corner_node[1]) + HEIGHT // draw_scale
+        x = ((WIDTH // draw_scale) * corner_node[0]/corner_node[1]) + WIDTH // 2
+        z = - ((HEIGHT // draw_scale) * corner_node[2]/corner_node[1]) + HEIGHT // 2
         y = corner_node[1]
         return np.array([x,y,z])
 
@@ -144,14 +145,22 @@ def drawcube(cube_obj, coordinate_camera = np.array([0,0,0]), orientation_camera
         if y1 > 0 and y2 > 0:
             pg.draw.line(SCREEN, WHITE, (x1,z1), (x2,z2))
 
-    corner_nodes = np.apply_along_axis(project, -1, transform(cube_obj.coordinates, coordinate_camera, orientation_camera))
+    #corner_nodes = np.apply_along_axis(project, -1, transform(cube_obj.coordinates, coordinate_camera, orientation_camera))
     # corner_nodes = np.apply_along_axis(project, -1, transform(cube_obj, coordinate_camera, orientation_camera))
     # vertices_cube = np.array([(0,4),(0,3),(0,1),(7,4),(7,3),(7,6),(5,4),(5,6),(5,1),(2,3),(2,1),(2,6)])
-    vertices_cube = cube_obj.vertices
-    np.apply_along_axis(drawN, -1, corner_nodes)
-    np.apply_along_axis(drawV, -1, vertices_cube)
-
+    #np.apply_along_axis(drawN, -1, corner_nodes)
     
+    try:
+        corner_nodes = np.apply_along_axis(project, -1, transform(cube_obj.coordinates, coordinate_camera, orientation_camera))
+        np.apply_along_axis(drawN, -1, corner_nodes)
+    except AttributeError:
+        raise Exception(f".coordinates in {cube_obj.__class__} is empty")
+
+    try:
+        vertices_cube = cube_obj.vertices
+        np.apply_along_axis(drawV, -1, vertices_cube)
+    except AttributeError:
+        raise Exception(f".vertices in {cube_obj.__class__} is empty")
     
     # for corner_node in corner_nodes:
 
@@ -180,13 +189,15 @@ def main():
     # q, w, e = 0, 0, 0
 
     camera = Camera(0,0,0)
-    cuboids = []
-    for i in range(10):
-        for j in range(i):
-            cuboids.append(Cube(i*10, 50, j*10, 10))
     
+    # cuboids = []
+    # for i in range(5):
+    #     for j in range(i):
+    #         cuboids.append(Cube(i*10, 50, j*10, 10))
     # print(sys.getsizeof(cuboids))
-    #cuboid = Cube(0, 50, 0, 10)
+    
+    cuboid = Cube(50, 0, 0, 10)
+    element = Sphere(0,0,0,radius=10,iteration=15)
 
     while run_state:
         clock.tick(FPS)
@@ -229,8 +240,11 @@ def main():
 
         #draw_cube(cube(100, 50, 100, 10), np.array([q,w,e]), np.array([a,b,c]))
         #draw_cube(cube(10, 10, 100, 10), np.array([q,w,e]), np.array([a,b,c]))
-        for cuboid in cuboids:
-             drawcube(cuboid, np.array([camera.x, camera.y , camera.z]), np.array([a,b,c]))
+        # for cuboid in cuboids:
+        #      drawcube(cuboid, np.array([camera.x, camera.y , camera.z]), np.array([a,b,c]))
+        drawcube(element, np.array([camera.x, camera.y , camera.z]), np.array([a,b,c]))
+        drawcube(cuboid, np.array([camera.x, camera.y , camera.z]), np.array([a,b,c]))
+
         # for i in range(15):
         #     for j in range(15):
         #         draw_cube(np.array(cube(10*i, 50, 10*j, 10)), np.array([camera.x, camera.y , camera.z]), np.array([a,b,c]))
