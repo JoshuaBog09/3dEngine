@@ -13,7 +13,7 @@ class Sphere():
         self.generate_coordinates()
         self.generate_vertices()
 
-    def generate_coordinates(self):
+    def generate_coordinates(self) -> None:
         self.coordinates = []
         for psi in np.linspace(0,2*math.pi,self.iter):
             for theta in np.linspace(0,math.pi,self.iter):
@@ -24,14 +24,14 @@ class Sphere():
                 ])
         self.coordinates = np.array(self.coordinates)
     
-    def generate_vertices(self):
+    def generate_vertices(self) -> None:
         self.vertices = []
         for i in range(self.iter):
             for j in range(self.iter - 1):
-                self.vertices.append(((j+(i*self.iter)) % self.iter**2,(j+1+(i*self.iter)) % self.iter**2))
-                self.vertices.append(((j+(i*self.iter)) % self.iter**2,(j+self.iter+(i*self.iter)) % self.iter**2))
-                self.vertices.append(((j+(i*self.iter)) % self.iter**2,(j+1+self.iter+(i*self.iter)) % self.iter**2))
-        self.vertices = np.array(self.vertices)
+                self.vertices.append((j,j+1))
+                self.vertices.append((j,j+self.iter))
+                self.vertices.append((j,j+1+self.iter))
+        self.vertices = (np.array(self.vertices) + i*self.iter) % self.iter**2
 
     def set_state() -> None:
         pass
