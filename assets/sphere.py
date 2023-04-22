@@ -12,21 +12,26 @@ class Sphere(baseshape.BaseShape):
         self.r = radius
         self.iter = iteration
 
-    def initialize(self)  -> None:
-        self.generate_coordinates()
+    def initialize(self):
         self.generate_triangles()
+        self.generate_unit()
+        self.transform()
+        self.translate()
 
-    def generate_coordinates(self)  -> None:
-        self.coordinates = []
+    def update(self, rotate):
+        self.transform(rotate)
+        self.translate()
+
+    def generate_unit(self)  -> None:
+        self.unit = []
         for psi in np.linspace(0,2*math.pi,self.iter):
             for theta in np.linspace(0,math.pi,self.iter):
-                self.coordinates.append([
-                    self.r*math.cos(psi)*math.sin(theta) + self.x,
-                    self.r*math.sin(psi)*math.sin(theta) + self.y,
-                    self.r*math.cos(theta) + self.z
+                self.unit.append([
+                    self.r*math.cos(psi)*math.sin(theta),
+                    self.r*math.sin(psi)*math.sin(theta),
+                    self.r*math.cos(theta)
                 ])
-        self.coordinates = np.array(self.coordinates)
-
+        self.unit = np.array(self.unit)
 
     def generate_vertices(self) -> None:
         self.vertices = []
@@ -44,3 +49,14 @@ class Sphere(baseshape.BaseShape):
                 self.triangles.append((j+(i*self.iter),j+self.iter+(i*self.iter),j+1+self.iter+(i*self.iter)))
                 self.triangles.append((j+(i*self.iter),j+1+(i*self.iter),j+1+self.iter+(i*self.iter)))
         self.triangles = np.array(self.triangles, dtype=np.uint16) % self.iter**2
+
+    def generate_coordinates(self)  -> None:
+        self.coordinates = []
+        for psi in np.linspace(0,2*math.pi,self.iter):
+            for theta in np.linspace(0,math.pi,self.iter):
+                self.coordinates.append([
+                    self.r*math.cos(psi)*math.sin(theta) + self.x,
+                    self.r*math.sin(psi)*math.sin(theta) + self.y,
+                    self.r*math.cos(theta) + self.z
+                ])
+        self.coordinates = np.array(self.coordinates)

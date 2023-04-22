@@ -13,7 +13,6 @@ class Cube(baseshape.BaseShape):
         self.size = size
 
     def initialize(self):
-        #self.generate_coordinates()
         self.generate_triangles()
         self.generate_unit()
         self.transform()
@@ -54,3 +53,15 @@ class Cube(baseshape.BaseShape):
     
     def generate_vortices(self) -> None:
         self.vertices = np.array([(0,4),(0,3),(0,1),(7,4),(7,3),(7,6),(5,4),(5,6),(5,1),(2,3),(2,1),(2,6)])
+
+    def generate_coordinates(self) -> None:
+        self.coordinates = np.array((
+            (self.x + self.size//2, self.y + self.size//2, self.z + self.size//2),     # [+1,+1,+1]    node: 0
+            (self.x + self.size//2, self.y - self.size//2, self.z + self.size//2),     # [+1,-1,+1]    node: 1
+            (self.x - self.size//2, self.y - self.size//2, self.z + self.size//2),     # [-1,-1,+1]    node: 2
+            (self.x - self.size//2, self.y + self.size//2, self.z + self.size//2),     # [-1,+1,+1]    node: 3
+            (self.x + self.size//2, self.y + self.size//2, self.z - self.size//2),     # [+1,+1,-1]    node: 4
+            (self.x + self.size//2, self.y - self.size//2, self.z - self.size//2),     # [+1,-1,-1]    node: 5
+            (self.x - self.size//2, self.y - self.size//2, self.z - self.size//2),     # [-1,-1,-1]    node: 6
+            (self.x - self.size//2, self.y + self.size//2, self.z - self.size//2))     # [-1,+1,-1]    node: 7
+            )

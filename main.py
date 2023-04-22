@@ -191,6 +191,7 @@ def main():
     clock = pg.time.Clock()
 
     a, b, c = 0, 0, 0
+    d, e, f = 0, 0, 0
     # q, w, e = 0, 0, 0
 
     camera = Camera(0,0,0)
@@ -208,8 +209,19 @@ def main():
     cuboid3 = Cube(-20, 0, 0, 10)
     cuboid4 = Cube(0, 0, 20, 10)
     cuboid5 = Cube(0, 0, -20, 10)
-    element = Sphere(0,0,0,radius=5,iteration=10)
-    element.initialize()
+    
+    element1 = Sphere(0,0,0,radius=5,iteration=10)
+    element2 = Sphere(20,0,20,radius=5,iteration=10)
+    element3 = Sphere(-20,0,20,radius=5,iteration=10)
+    element4 = Sphere(20,0,-20,radius=5,iteration=10)
+    element5 = Sphere(-20,0,-20,radius=5,iteration=10)
+    
+    element1.initialize()
+    element2.initialize()
+    element3.initialize()
+    element4.initialize()
+    element5.initialize()
+    
     cuboid1.initialize()
     cuboid2.initialize()
     cuboid3.initialize()
@@ -251,6 +263,10 @@ def main():
         b += math.pi / 356
         c += math.pi / 156
 
+        d -= math.pi / 256
+        e -= math.pi / 356
+        f -= math.pi / 156
+
         # q += 1
         # w += 1
         # e += 1
@@ -259,7 +275,18 @@ def main():
         #draw_cube(cube(10, 10, 100, 10), np.array([q,w,e]), np.array([a,b,c]))
         # for cuboid in cuboids:
         #     drawcube(cuboid, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]) , np.array([a,b,c]))
-        drawcube(element, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        
+        drawcube(element1, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        element1.update(np.array([d,e,f]))
+        drawcube(element2, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        element2.update(np.array([d,e,f]))
+        drawcube(element3, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        element3.update(np.array([d,e,f]))
+        drawcube(element4, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        element4.update(np.array([d,e,f]))
+        drawcube(element5, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        element5.update(np.array([d,e,f]))
+
         drawcube(cuboid1, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
         cuboid1.update(np.array([a,b,c]))
         drawcube(cuboid2, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
