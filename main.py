@@ -204,13 +204,17 @@ def main():
     # print(sys.getsizeof(cuboids))
     
     cuboid1 = Cube(0, 0, 0, 10)
-    # cuboid2 = Cube(0, 0, 10, 10)
-    # cuboid3 = Cube(0, 0, 20, 10)
-    # element = Sphere(0,50,0,radius=10,iteration=10)
-    # element.initialize()
+    cuboid2 = Cube(20, 0, 0, 10)
+    cuboid3 = Cube(-20, 0, 0, 10)
+    cuboid4 = Cube(0, 0, 20, 10)
+    cuboid5 = Cube(0, 0, -20, 10)
+    element = Sphere(0,0,0,radius=5,iteration=10)
+    element.initialize()
     cuboid1.initialize()
-    # cuboid2.initialize()
-    # cuboid3.initialize()
+    cuboid2.initialize()
+    cuboid3.initialize()
+    cuboid4.initialize()
+    cuboid5.initialize()
 
     while run_state:
         clock.tick(FPS)
@@ -255,10 +259,17 @@ def main():
         #draw_cube(cube(10, 10, 100, 10), np.array([q,w,e]), np.array([a,b,c]))
         # for cuboid in cuboids:
         #     drawcube(cuboid, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]) , np.array([a,b,c]))
-        # drawcube(element, np.array([camera.x, camera.y , camera.z]), np.array([a,b,c]))
+        drawcube(element, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
         drawcube(cuboid1, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
-        # drawcube(cuboid2, np.array([camera.x, camera.y , camera.z]), np.array([a,b,c]))
-        # drawcube(cuboid3, np.array([camera.x, camera.y , camera.z]), np.array([a,b,c]))
+        cuboid1.update(np.array([a,b,c]))
+        drawcube(cuboid2, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        cuboid2.update(np.array([a, b, c]))
+        drawcube(cuboid3, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        cuboid3.update(np.array([a, b, c]))
+        drawcube(cuboid4, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        cuboid4.update(np.array([a, b, c]))
+        drawcube(cuboid5, np.array([camera.x, camera.y , camera.z]), np.array([0,0,0]), np.array([a,b,c]))
+        cuboid5.update(np.array([a, b, c]))
 
         # for i in range(15):
         #     for j in range(15):

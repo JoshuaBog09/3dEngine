@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 class Cube():
     
@@ -9,8 +10,39 @@ class Cube():
         self.size = size
         
     def initialize(self):
-        self.generate_coordinates()
+        #self.generate_coordinates()
         self.generate_triangles()
+        self.generate_unit()
+        self.transform()
+        self.translate()
+
+    def update(self, rotate):
+        self.transform(rotate)
+        self.translate()
+
+    def transform(self, rotate=np.array([0,0,0])) -> None:
+        
+        transform_x = np.array([[1,0,0],[0,math.cos(rotate[0]),math.sin(rotate[0])],[0,-math.sin(rotate[0]),math.cos(rotate[0])]])
+        transform_y = np.array([[math.cos(rotate[1]),0,-math.sin(rotate[1])],[0,1,0],[math.sin(rotate[1]),0,math.cos(rotate[1])]])
+        transform_z = np.array([[math.cos(rotate[2]),math.sin(rotate[2]),0],[-math.sin(rotate[2]),math.cos(rotate[2]),0],[0,0,1]])
+        transform = transform_x @ transform_y @ transform_z
+        
+        self.coordinates = np.matmul(self.unit, transform)
+    
+    def generate_unit(self) -> None:
+        self.unit = np.array((
+            (+self.size//2, +self.size//2, +self.size//2),     # [+1,+1,+1]    node: 0
+            (+self.size//2, -self.size//2, +self.size//2),     # [+1,-1,+1]    node: 1
+            (-self.size//2, -self.size//2, +self.size//2),     # [-1,-1,+1]    node: 2
+            (-self.size//2, +self.size//2, +self.size//2),     # [-1,+1,+1]    node: 3
+            (+self.size//2, +self.size//2, -self.size//2),     # [+1,+1,-1]    node: 4
+            (+self.size//2, -self.size//2, -self.size//2),     # [+1,-1,-1]    node: 5
+            (-self.size//2, -self.size//2, -self.size//2),     # [-1,-1,-1]    node: 6
+            (-self.size//2, +self.size//2, -self.size//2))     # [-1,+1,-1]    node: 7
+            )
+        
+    def translate(self) -> None:
+        self.coordinates += np.array([self.x, self.y, self.z])
 
 
     def generate_coordinates(self) -> None:
@@ -53,10 +85,3 @@ class Cube():
     
     def set_state(self) -> None:
         pass
-
-for i in range(0,2):
-    for j in range(0,2):
-        for k in range(0,2):
-            print([i,j,k])
-
-print(np.array([[i,j,k] for k in range(0,2) for j in range(0,2) for i in range(0,2)]))
