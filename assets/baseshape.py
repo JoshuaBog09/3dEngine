@@ -4,10 +4,15 @@ import math
 
 class BaseShape():
 
-    def __init__(self, x:int = 0, y:int = 0, z:int = 0) -> None:
+    def __init__(self, x:int = 0, y:int = 0, z:int = 0, 
+                 theta_x: float = 0, theta_y: float = 0, theta_z: float = 0) -> None:
         self.x = x
         self.y = y
         self.z = z
+
+        self.theta_x = theta_x
+        self.theta_y = theta_y
+        self.theat_z = theta_z
 
         self.unit = None
         
@@ -44,3 +49,9 @@ class BaseShape():
 
     def set_state(self) -> None:
         pass
+
+    def get_position(self):
+        return np.array([self.x, self.y, self.z])
+    
+    def get_orientation(self):
+        return np.array([self.theta_x, self.theta_y, self.theat_z])

@@ -7,15 +7,17 @@ import assets.baseshape as baseshape
 
 class Cube(baseshape.BaseShape):
 
-    def __init__(self, x: int = 0, y: int = 0, z: int = 0, size:int = 10) -> None:
-        super().__init__(x, y, z)
+    def __init__(self, x: int = 0, y: int = 0, z: int = 0,
+                 theta_x: float = 0, theta_y: float = 0, theta_z: float = 0,
+                  size:int = 10) -> None:
+        super().__init__(x, y, z, theta_x, theta_y, theta_z)
         
         self.size = size
 
     def initialize(self):
         self.generate_triangles()
         self.generate_unit()
-        self.transform()
+        self.transform(self.get_orientation())
         self.translate()
 
     def update(self, rotate):
