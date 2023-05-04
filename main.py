@@ -6,6 +6,9 @@ import pygame as pg
 from camera import Camera
 from assets.cube import Cube
 from assets.sphere import Sphere
+from assets.ring import Ring
+
+import utility.utils as utils
 
 WHITE = (244, 243, 239)
 BLACK = (16, 16, 16)
@@ -20,52 +23,6 @@ FPS = 60
 
 pg.display.set_caption("3D-Engine")
 
-
-def draw_cube(coordinates_cube:list, coordinate_camera = np.array([0,0,0]), orientation_camera = np.array([0,0,0])):
-    """
-    Draw a cube given a set of coordinates
-    """
-
-    x_camera = coordinate_camera[0]   # left/right
-    y_camera = coordinate_camera[1]   # forward/backword
-    z_camera = coordinate_camera[2]   # up/down    
-
-    theta_x_camera = orientation_camera[0]
-    theta_y_camera = orientation_camera[1]
-    theta_z_camera = orientation_camera[2]
-
-    draw_scale = 2
-
-    for coordinate in coordinates_cube:
-        
-        x_cube = coordinate[0]   # left/right
-        y_cube = coordinate[1]   # forward/backword
-        z_cube = coordinate[2]   # up/down
-
-        delta_cameracube = np.array([x_cube-x_camera,y_cube-y_camera,z_cube-z_camera])
-
-        transform_x = np.array([[1,0,0],[0,math.cos(theta_x_camera),math.sin(theta_x_camera)],[0,-math.sin(theta_x_camera),math.cos(theta_x_camera)]])
-        transform_y = np.array([[math.cos(theta_y_camera),0,-math.sin(theta_y_camera)],[0,1,0],[math.sin(theta_y_camera),0,math.cos(theta_y_camera)]])
-        transform_z = np.array([[math.cos(theta_z_camera),math.sin(theta_z_camera),0],[-math.sin(theta_z_camera),math.cos(theta_z_camera),0],[0,0,1]])
-        transform = transform_x @ transform_y @ transform_z
-
-        corner_nodes = np.matmul(transform, delta_cameracube)
-
-        x = ((WIDTH // draw_scale) * corner_nodes[0]/corner_nodes[1]) + WIDTH // 2
-        z = - ((HEIGHT // draw_scale) * corner_nodes[2]/corner_nodes[1]) + HEIGHT // 2
-        y = corner_nodes[1]
-
-        # or this (look into this)
-        # x = ((WIDTH // 4) * corner_nodes[0]/corner_nodes[2]) + WIDTH // 2
-        # y = ((HEIGHT // 4) * corner_nodes[1]/corner_nodes[2]) + HEIGHT // 2
-        # z = corner_nodes[2]
-
-        # print(f"{x=}")
-        # print(f"{z=}")
-        
-        pg.draw.circle(SCREEN, WHITE, (x,z) , 100/y)
-
-
 def drawcube(cube_obj: object, camera_obj: object, rotate = np.array([0,0,0])):
     """
     Draw a cube given a set of coordinates
@@ -74,28 +31,6 @@ def drawcube(cube_obj: object, camera_obj: object, rotate = np.array([0,0,0])):
 
     draw_scale = 2
     draw_depth = 50
-
-
-    def transform(coordinates_cube, coordinate_camera, orientation_camera):
-        
-        delta_cameracube = (coordinates_cube - coordinate_camera)
-        
-        transform_x = np.array([[1,0,0],[0,math.cos(orientation_camera[0]),math.sin(orientation_camera[0])],[0,-math.sin(orientation_camera[0]),math.cos(orientation_camera[0])]])
-        transform_y = np.array([[math.cos(orientation_camera[1]),0,-math.sin(orientation_camera[1])],[0,1,0],[math.sin(orientation_camera[1]),0,math.cos(orientation_camera[1])]])
-        transform_z = np.array([[math.cos(orientation_camera[2]),math.sin(orientation_camera[2]),0],[-math.sin(orientation_camera[2]),math.cos(orientation_camera[2]),0],[0,0,1]])
-        transform = transform_x @ transform_y @ transform_z
-        
-        return np.matmul(delta_cameracube, transform)
-    
-    def transform_rotate(coordinates, rotate):
-        
-        transform_x = np.array([[1,0,0],[0,math.cos(rotate[0]),math.sin(rotate[0])],[0,-math.sin(rotate[0]),math.cos(rotate[0])]])
-        transform_y = np.array([[math.cos(rotate[1]),0,-math.sin(rotate[1])],[0,1,0],[math.sin(rotate[1]),0,math.cos(rotate[1])]])
-        transform_z = np.array([[math.cos(rotate[2]),math.sin(rotate[2]),0],[-math.sin(rotate[2]),math.cos(rotate[2]),0],[0,0,1]])
-        transform = transform_x @ transform_y @ transform_z
-        
-        return np.matmul(coordinates, transform)
-
 
     def project(corner_node):
         y = corner_node[1]
@@ -147,8 +82,8 @@ def drawcube(cube_obj: object, camera_obj: object, rotate = np.array([0,0,0])):
     
     try:
         coordinates = cube_obj.get_coordinates()
-        coordinates = transform_rotate(coordinates, rotate)
-        corner_nodes = np.apply_along_axis(project, -1, transform(coordinates, camera_obj.get_position(), camera_obj.get_orientation()))
+        coordinates = utils.transform_V1(coordinates, rotate)
+        corner_nodes = np.apply_along_axis(project, -1, utils.transform_V1((coordinates - camera_obj.get_position()), camera_obj.get_orientation()))
         np.apply_along_axis(drawN, -1, corner_nodes)
     except AttributeError:
         raise Exception(f".coordinates in {cube_obj.__class__} is empty")
@@ -196,29 +131,19 @@ def main():
 
     camera = Camera(0,0,0)
     
-    cuboid1 = Cube(0, 0, 0, math.pi/4, math.pi/4, math.pi/4, size=10)
-    cuboid2 = Cube(20, 0, 0, size=10)
-    cuboid3 = Cube(-20, 0, 0, size=10)
-    cuboid4 = Cube(0, 0, 20, size=10)
-    cuboid5 = Cube(0, 0, -20, size=10)
+
+    render_list = []
+
+    for i in range(1):
+        for j in range(1):
+            for k in range(1):
+                render_list.append(Ring(i*10,j*10,k*10,0,0,0))
+                render_list[-1].initialize(False)
+
+
+    # cuboid1 = Cube(0, 0, 0, math.pi/4, math.pi/4, math.pi/4, size=10)
     
-    element1 = Sphere(0,0,0,radius=5,iteration=10)
-    element2 = Sphere(20,0,20,radius=5,iteration=10)
-    element3 = Sphere(-20,0,20,radius=5,iteration=10)
-    element4 = Sphere(20,0,-20,radius=5,iteration=10)
-    element5 = Sphere(-20,0,-20,radius=5,iteration=10)
-    
-    element1.initialize()
-    element2.initialize()
-    element3.initialize()
-    element4.initialize()
-    element5.initialize()
-    
-    cuboid1.initialize()
-    cuboid2.initialize()
-    cuboid3.initialize()
-    cuboid4.initialize()
-    cuboid5.initialize()
+    # cuboid1.initialize()
 
     while run_state:
         clock.tick(FPS)
@@ -263,31 +188,9 @@ def main():
         # w += 1
         # e += 1
 
-        drawcube(element1, camera)
-        element1.update(np.array([d,e,f]))
-        drawcube(element2, camera)
-        element2.update(np.array([d,e,f]))
-        drawcube(element3, camera)
-        element3.update(np.array([d,e,f]))
-        drawcube(element4, camera)
-        element4.update(np.array([d,e,f]))
-        drawcube(element5, camera)
-        element5.update(np.array([d,e,f]))
+        for obj in render_list:
+            drawcube(obj, camera)
 
-        # drawcube(cuboid1, camera)
-        # cuboid1.update(np.array([a,b,c]))
-        # drawcube(cuboid2, camera, np.array([a,-b,c]))
-        # cuboid2.update(np.array([a, b, c]))
-        drawcube(cuboid3, camera)
-        cuboid3.update(np.array([0, 0, c]))
-        drawcube(cuboid4, camera)
-        cuboid4.update(np.array([0, -b, 0]))
-        # drawcube(cuboid5, camera)
-        # cuboid5.update(np.array([a, b, c]))
-
-        # for i in range(15):
-        #     for j in range(15):
-        #         draw_cube(np.array(cube(10*i, 50, 10*j, 10)), np.array([camera.x, camera.y , camera.z]), np.array([a,b,c]))
 
         pg.display.flip()
 

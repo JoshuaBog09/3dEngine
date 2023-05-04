@@ -14,7 +14,7 @@ class Cube(baseshape.BaseShape):
         
         self.size = size
 
-    def initialize(self):
+    def initialize(self, orientation=True):
         self.generate_triangles()
         self.generate_unit()
         self.transform(self.get_orientation())

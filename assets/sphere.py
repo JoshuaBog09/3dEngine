@@ -14,7 +14,7 @@ class Sphere(baseshape.BaseShape):
         self.r = radius
         self.iter = iteration
 
-    def initialize(self):
+    def initialize(self, orientation=True):
         self.generate_triangles()
         self.generate_unit()
         self.transform(self.get_orientation())
@@ -37,7 +37,7 @@ class Sphere(baseshape.BaseShape):
 
     def generate_vertices(self) -> None:
         self.vertices = []
-        for i in range(self.iter):
+        for i in range(self.iter - 1):
             for j in range(self.iter - 1):
                 self.vertices.append((j+(i*self.iter),j+1+(i*self.iter)))
                 self.vertices.append((j+(i*self.iter),j+self.iter+(i*self.iter)))
@@ -46,8 +46,8 @@ class Sphere(baseshape.BaseShape):
 
     def generate_triangles(self)  -> None:
         self.triangles = []
-        for i in range(self.iter):
-            for j in range(self.iter - 1):
+        for i in range(self.iter - 1):
+            for j in range(self.iter -1):
                 self.triangles.append((j+(i*self.iter),j+self.iter+(i*self.iter),j+1+self.iter+(i*self.iter)))
                 self.triangles.append((j+(i*self.iter),j+1+(i*self.iter),j+1+self.iter+(i*self.iter)))
         self.triangles = np.array(self.triangles, dtype=np.uint16) % self.iter**2
