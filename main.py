@@ -7,6 +7,7 @@ from camera import Camera
 from assets.cube import Cube
 from assets.sphere import Sphere
 from assets.ring import Ring
+from assets.ring import RingBevel
 
 import utility.utils as utils
 
@@ -89,11 +90,11 @@ def drawcube(cube_obj: object, camera_obj: object, rotate = np.array([0,0,0])):
         raise Exception(f".coordinates in {cube_obj.__class__} is empty")
 
     
-    try:
-        triangles_cube = cube_obj.get_triangles()
-        np.apply_along_axis(drawT, -1, triangles_cube)
-    except AttributeError:
-        raise Exception(f".triangles in {cube_obj.__class__} is empty")
+    # try:
+    #     triangles_cube = cube_obj.get_triangles()
+    #     np.apply_along_axis(drawT, -1, triangles_cube)
+    # except AttributeError:
+    #     raise Exception(f".triangles in {cube_obj.__class__} is empty")
     
     # try:
     #     vertices_cube = cube_obj.vertices
@@ -137,7 +138,7 @@ def main():
     for i in range(1):
         for j in range(1):
             for k in range(1):
-                render_list.append(Ring(i*10,j*10,k*10,0,0,0))
+                render_list.append(RingBevel(i*10,j*10,k*10,0,0,0, bevel_amount=3,bevel_tickness=1))
                 render_list[-1].initialize(False)
 
 
@@ -190,6 +191,7 @@ def main():
 
         for obj in render_list:
             drawcube(obj, camera)
+            obj.update(np.array([a, b, c]))
 
 
         pg.display.flip()

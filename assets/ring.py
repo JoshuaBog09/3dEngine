@@ -56,7 +56,7 @@ class RingBevel(baseshape.BaseShape):
     def __init__(self, x: int = 0, y: int = 0, z: int = 0,
                   theta_x: float = 0, theta_y: float = 0, theta_z: float = 0,
                   radius_inner: float = 50, radius_outer: float = 10, tickness: float = 10,
-                  iteration: int = 10) -> None:
+                  iteration: int = 10, bevel_amount: int = 0, bevel_tickness:int = 0) -> None:
         super().__init__(x, y, z, theta_x, theta_y, theta_z)
         
         self.inner = radius_inner
@@ -64,7 +64,9 @@ class RingBevel(baseshape.BaseShape):
         self.iter = iteration
 
         self.tickness = tickness
-        self.bevel = 1
+        
+        self.bevel_amount = bevel_amount + 2
+        self.bevel_tickness = bevel_tickness
 
     def initialize(self, orientation=True):
         self.generate_triangles()
@@ -78,22 +80,23 @@ class RingBevel(baseshape.BaseShape):
 
     def generate_unit(self):
         self.unit = []
-        # for t_level in np.linspace(- self.tickness // 2, + self.tickness // 2, )
+
         for phi in np.linspace(0,2*math.pi,self.iter):
             self.unit.append([
                     self.outer*math.cos(phi),
                     self.outer*math.sin(phi),
-                    + self.tickness // 2
+                    - self.tickness // 2
                 ])
-            self.unit.append([
-                    (self.outer + self.bevel)*math.cos(phi),
-                    (self.outer + self.bevel)*math.sin(phi),
-                    0
-                ])
+            for t_level in np.linspace(- self.tickness // 2, + self.tickness // 2, self.bevel_amount, endpoint=True):
+                self.unit.append([
+                        (self.outer + self.bevel_tickness)*math.cos(phi),
+                        (self.outer + self.bevel_tickness)*math.sin(phi),
+                        t_level
+                    ])
             self.unit.append([
                     self.outer*math.cos(phi),
                     self.outer*math.sin(phi),
-                    - self.tickness // 2
+                    + self.tickness // 2
                 ])
         self.unit = np.array(self.unit)
     
