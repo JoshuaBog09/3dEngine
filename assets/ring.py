@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 import math
 
@@ -68,6 +69,7 @@ class RingBevel(baseshape.BaseShape):
         self.bevel_amount = bevel_amount + 2
         self.bevel_tickness = bevel_tickness
 
+
     def initialize(self, orientation=True):
         self.generate_triangles()
         self.generate_unit()
@@ -81,30 +83,48 @@ class RingBevel(baseshape.BaseShape):
     def generate_unit(self):
         self.unit = []
 
+        bevel_tickness_level = np.sin(np.linspace(0, math.pi, self.bevel_amount, endpoint=True)) * self.bevel_tickness
+
         for phi in np.linspace(0,2*math.pi,self.iter):
-            self.unit.append([
-                    self.outer*math.cos(phi),
-                    self.outer*math.sin(phi),
-                    - self.tickness // 2
-                ])
-            for t_level in np.linspace(- self.tickness // 2, + self.tickness // 2, self.bevel_amount, endpoint=True):
+            for idx, t_level in enumerate(np.linspace(- self.tickness // 2, + self.tickness // 2, 
+                                                 self.bevel_amount, endpoint=True)):
                 self.unit.append([
-                        (self.outer + self.bevel_tickness)*math.cos(phi),
-                        (self.outer + self.bevel_tickness)*math.sin(phi),
+                        (self.outer + bevel_tickness_level[idx])*math.cos(phi),
+                        (self.outer + bevel_tickness_level[idx])*math.sin(phi),
                         t_level
                     ])
-            self.unit.append([
-                    self.outer*math.cos(phi),
-                    self.outer*math.sin(phi),
-                    + self.tickness // 2
-                ])
         self.unit = np.array(self.unit)
     
     def generate_triangles(self):
         self.triangles = []
         for i in range(self.iter - 1):
-            self.triangles.append(((i*3) + 0, (i*3) + 1, (i*3) + 3))
-            self.triangles.append(((i*3) + 1, (i*3) + 3, (i*3) + 4))
-            self.triangles.append(((i*3) + 1, (i*3) + 2, (i*3) + 4))
-            self.triangles.append(((i*3) + 2, (i*3) + 4, (i*3) + 5))
+            for j in range(self.bevel_amount - 1):
+                self.triangles.append((
+                    (i*self.bevel_amount) + 0 + j,
+                    (i*self.bevel_amount) + 1 + j,
+                    (i*self.bevel_amount) + (0 + self.bevel_amount + j)))
+                self.triangles.append((
+                    (i*self.bevel_amount) + 1 + j,
+                    (i*self.bevel_amount) + (0 + self.bevel_amount + j),
+                    (i*self.bevel_amount) + (1 + self.bevel_amount + j))) 
+                # self.triangles.append((
+                #     (i*self.bevel_amount) + 0,
+                #     (i*self.bevel_amount) + 1,
+                #     (i*self.bevel_amount) + 3))
+                # self.triangles.append((
+                #     (i*self.bevel_amount) + 1,
+                #     (i*self.bevel_amount) + 3,
+                #     (i*self.bevel_amount) + 4))
+                # self.triangles.append((
+                #     (i*self.bevel_amount) + 1,
+                #     (i*self.bevel_amount) + 2,
+                #     (i*self.bevel_amount) + 4))
+                # self.triangles.append((
+                #     (i*self.bevel_amount) + 2,
+                #     (i*self.bevel_amount) + 4,
+                #     (i*self.bevel_amount) + 5))
         self.triangles = np.array(self.triangles, dtype=np.uint16) % (self.iter*3)
+
+
+if __name__ == "__main__":
+    pass
