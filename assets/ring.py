@@ -123,7 +123,7 @@ class RingBevel(baseshape.BaseShape):
                 #     (i*self.bevel_amount) + 2,
                 #     (i*self.bevel_amount) + 4,
                 #     (i*self.bevel_amount) + 5))
-        self.triangles = np.array(self.triangles, dtype=np.uint16) % (self.iter*3)
+        self.triangles = np.array(self.triangles, dtype=np.uint16) % (self.iter*self.bevel_amount)
 
 
 if __name__ == "__main__":

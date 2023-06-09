@@ -30,7 +30,7 @@ def drawcube(cube_obj: object, camera_obj: object, rotate = np.array([0,0,0])):
     [x: left/right, y: forward/backword, z: up/down]
     """    
 
-    draw_scale = 2
+    draw_scale = 1
     draw_depth = 50
 
     def project(corner_node):
@@ -138,7 +138,7 @@ def main():
     for i in range(1):
         for j in range(1):
             for k in range(1):
-                render_list.append(RingBevel(i*10,j*10,k*10,0,0,0, bevel_amount=0,bevel_tickness=1))
+                render_list.append(RingBevel(i*10,j*10,k*10,0,0,0, bevel_amount=1,bevel_tickness=1))
                 render_list[-1].initialize(False)
 
 
