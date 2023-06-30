@@ -6,7 +6,7 @@ import pygame as pg
 from camera import Camera
 from assets.cube import Cube
 from assets.sphere import Sphere
-from assets.ring import Ring, RingBevel, RingT
+from assets.ring import Ring, RingT, RingBevel, RingBevelT
 
 import utility.utils as utils
 
@@ -138,7 +138,9 @@ def main():
         for j in range(1):
             for k in range(1):
                 # render_list.append(RingBevel(i*10,j*10,k*10,0,0,0, bevel_amount=10,bevel_tickness=1))
-                render_list.append(Ring(i*10,j*10,k*10,0,0,0, radius=10))
+                # render_list.append(Ring(i*10,j*10,k*10,0,0,0, radius=10))
+                # render_list.append(RingT())
+                render_list.append(RingBevelT(i*10,j*10,k*10,0,0,0, bevel_amount=1, bevel_tickness=1, radius_inner=5, radius_outer=7))
                 render_list[-1].initialize(False)
 
 
