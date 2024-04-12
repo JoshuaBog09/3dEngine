@@ -10,16 +10,11 @@ from assets.ring import Ring, RingT, RingBevel, RingBevelT
 
 import utility.utils as utils
 
-WHITE = (244, 243, 239)
-BLACK = (16, 16, 16)
+import settings.colors as colors
+import settings.screen as scr
 
-WIDTH = 800
-HEIGHT = 800
-
-RESOLUTION = (WIDTH,HEIGHT)
+RESOLUTION = (scr.WIDTH,scr.HEIGHT)
 SCREEN = pg.display.set_mode(RESOLUTION)
-
-FPS = 60
 
 pg.display.set_caption("3D-Engine")
 
@@ -35,8 +30,8 @@ def drawobject(obj: object, camera_obj: object, rotate = np.array([0,0,0])):
     def project(corner_node):
         y = corner_node[1]
         if y > 0:
-            x = ((WIDTH // draw_scale) * corner_node[0]/corner_node[1]) + WIDTH // 2
-            z = - ((HEIGHT // draw_scale) * corner_node[2]/corner_node[1]) + HEIGHT // 2
+            x = ((scr.WIDTH // draw_scale) * corner_node[0]/corner_node[1]) + scr.WIDTH // 2
+            z = - ((scr.HEIGHT // draw_scale) * corner_node[2]/corner_node[1]) + scr.HEIGHT // 2
         else:
             x = np.Infinity
             z = np.Infinity
@@ -50,7 +45,7 @@ def drawobject(obj: object, camera_obj: object, rotate = np.array([0,0,0])):
         z = corner_node[2]
         
         if y > 0:
-            pg.draw.circle(SCREEN, WHITE, (x,z), draw_depth/y)
+            pg.draw.circle(SCREEN, colors.WHITE, (x,z), draw_depth/y)
 
     
     def drawV(vertice_node):
@@ -62,7 +57,7 @@ def drawobject(obj: object, camera_obj: object, rotate = np.array([0,0,0])):
         z2 = corner_nodes[vertice_node[1],2]
 
         if y1 > 0 and y2 > 0:
-            pg.draw.line(SCREEN, WHITE, (x1,z1), (x2,z2))
+            pg.draw.line(SCREEN, colors.WHITE, (x1,z1), (x2,z2))
 
     
     def drawT(triangle_node):
@@ -77,7 +72,7 @@ def drawobject(obj: object, camera_obj: object, rotate = np.array([0,0,0])):
         z3 = corner_nodes[triangle_node[2],2]
 
         if y1 >= 0 and y2 >= 0 and y3 >= 0:
-            pg.draw.polygon(SCREEN, WHITE, ((x1,z1), (x2,z2), (x3, z3)), width= 1)
+            pg.draw.polygon(SCREEN, colors.WHITE, ((x1,z1), (x2,z2), (x3, z3)), width= 1)
 
     
     try:
@@ -102,23 +97,6 @@ def drawobject(obj: object, camera_obj: object, rotate = np.array([0,0,0])):
     #     raise Exception(f".vertices in {cube_obj.__class__} is empty")
 
 
-    # for corner_node in corner_nodes:
-
-    #     x = corner_node[0]
-    #     y = corner_node[1]
-    #     z = corner_node[2]
-
-    #     # print(f"{x=}")
-    #     # print(f"{y=}")
-    #     # print(f"{z=}")
-
-    #     pg.draw.circle(SCREEN, WHITE, (x,z) , 100/y)
-    
-    # for vertice in vertices_cube:
-    #     if corner_nodes[vertice[0],1] > 0 and corner_nodes[vertice[1],1] > 0:
-    #         pg.draw.line(SCREEN, WHITE, (corner_nodes[vertice[0],0],corner_nodes[vertice[0],2]) , (corner_nodes[vertice[1],0],corner_nodes[vertice[1],2]))
-
-
 def main():
     pg.init()
 
@@ -133,11 +111,11 @@ def main():
     
 
     render_list = []
-    render_list.append(Ring(0,0,0,0,0,0, radius=100))
+    render_list.append(Ring(0,0,0,0,0,0, radius=10))
     render_list[-1].initialize(False)
 
     while run_state:
-        clock.tick(FPS)
+        clock.tick(scr.FPS)
 
         # Event handeling
         pg.event.pump()     # Flush event que
@@ -165,7 +143,7 @@ def main():
         
         # main script
 
-        SCREEN.fill(BLACK)
+        SCREEN.fill(colors.BLACK)
         
         a += math.pi / 256
         b += math.pi / 356
