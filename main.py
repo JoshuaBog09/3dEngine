@@ -23,7 +23,7 @@ FPS = 60
 
 pg.display.set_caption("3D-Engine")
 
-def drawcube(cube_obj: object, camera_obj: object, rotate = np.array([0,0,0])):
+def drawobject(obj: object, camera_obj: object, rotate = np.array([0,0,0])):
     """
     Draw a cube given a set of coordinates
     [x: left/right, y: forward/backword, z: up/down]
@@ -81,19 +81,19 @@ def drawcube(cube_obj: object, camera_obj: object, rotate = np.array([0,0,0])):
 
     
     try:
-        coordinates = cube_obj.get_coordinates()
-        coordinates = utils.transform_V1(coordinates, rotate)
-        corner_nodes = np.apply_along_axis(project, -1, utils.transform_V1((coordinates - camera_obj.get_position()), camera_obj.get_orientation()))
+        vertex = obj.get_coordinates()
+        vertex = utils.transform_V1(vertex, rotate)
+        corner_nodes = np.apply_along_axis(project, -1, utils.transform_V1((vertex - camera_obj.get_position()), camera_obj.get_orientation()))
         np.apply_along_axis(drawN, -1, corner_nodes)
     except AttributeError:
-        raise Exception(f".coordinates in {cube_obj.__class__} is empty")
+        raise Exception(f".coordinates in {obj.__class__} is empty")
 
     
     try:
-        triangles_cube = cube_obj.get_triangles()
-        np.apply_along_axis(drawT, -1, triangles_cube)
+        triangles = obj.get_triangles()
+        np.apply_along_axis(drawT, -1, triangles)
     except AttributeError:
-        raise Exception(f".triangles in {cube_obj.__class__} is empty")
+        raise Exception(f".triangles in {obj.__class__} is empty")
     
     # try:
     #     vertices_cube = cube_obj.vertices
@@ -180,7 +180,7 @@ def main():
         # e += 1
 
         for obj in render_list:
-            drawcube(obj, camera)
+            drawobject(obj, camera)
             obj.update(np.array([a, b, c]))
 
 
