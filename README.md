@@ -10,3 +10,4 @@
 - [ ] Generate whole scene and then draw
 - [ ] Add test for vertex and phase creation
 - [ ] Color based on tangent
+- [ ] See options for utils class
