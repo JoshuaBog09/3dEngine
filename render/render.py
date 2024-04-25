@@ -2,23 +2,28 @@ import pygame as pg
 import numpy as np
 
 import math
+import json
 
 from render.camera import Camera 
 
-import settings.screen as scr
-import settings.colors as colors
+from settings.colors import Colors as colors
 import utility.utils as utils
 
 class Screen():
 
     def __init__(self) -> None:
-        self.WIDTH = scr.WIDTH
-        self.HEIGHT = scr.HEIGHT
 
-        RESOLUTION = (scr.WIDTH,scr.HEIGHT)
+        with open('settings/settings.json') as f:
+            self.file = json.load(f)
+        
+        self.WIDTH = self.file["width"]
+        self.HEIGHT = self.file["height"]
+        self.FPS = self.file["fps"]
+
+        RESOLUTION = (self.WIDTH,self.HEIGHT)
         self.SCREEN = pg.display.set_mode(RESOLUTION)
     
-        pg.display.set_caption("3D-Engine")
+        pg.display.set_caption(self.file["title"])
 
         self.stack: list = []
     
@@ -35,9 +40,9 @@ class Screen():
         d, e, f = 0, 0, 0
 
         while run_state:
-            clock.tick(scr.FPS)
+            clock.tick(self.FPS)
 
-            # Event handeling
+            # Event handling
             pg.event.pump()     # Flush event que
             
             # Mouse events
@@ -56,7 +61,7 @@ class Screen():
             if keys[pg.K_UP]:
                 camera.moveForward()
             if keys[pg.K_DOWN]:
-                camera.moveBackword()
+                camera.moveBackward()
             if keys[pg.K_SPACE]:
                 camera.moveUp()
             if keys[pg.K_LSHIFT]:

@@ -10,7 +10,7 @@ class Camera():
 
         self.theta_x = theta_x
         self.theta_y = theta_y
-        self.theat_z = theta_z
+        self.theta_z = theta_z
 
     def moveRight(self):
         self.x += 1
@@ -18,7 +18,7 @@ class Camera():
         self.x -= 1
     def moveForward(self):
         self.y += 1
-    def moveBackword(self):
+    def moveBackward(self):
         self.y -= 1
     def moveUp(self):
         self.z += 1
@@ -29,7 +29,7 @@ class Camera():
         return np.array([self.x, self.y, self.z])
     
     def get_orientation(self):
-        return np.array([self.theta_x, self.theta_y, self.theat_z])
+        return np.array([self.theta_x, self.theta_y, self.theta_z])
 
     def __repr__(self) -> str:
         return f"Camera({self.x},{self.y},{self.z})"
