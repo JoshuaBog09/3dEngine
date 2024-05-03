@@ -172,8 +172,8 @@ class RingBevelT(baseshape.BaseShape):
 
     def __init__(self, x: int = 0, y: int = 0, z: int = 0,
                   theta_x: float = 0, theta_y: float = 0, theta_z: float = 0,
-                  radius_inner: float = 50, radius_outer: float = 10, tickness: float = 10,
-                  iteration: int = 10, bevel_amount: int = 0, bevel_tickness:int = 0) -> None:
+                  radius_inner: float = 10, radius_outer: float = 50, tickness: float = 10,
+                  iteration: int = 10, bevel_amount: int = 0, bevel_thickness:int = 0) -> None:
         super().__init__(x, y, z, theta_x, theta_y, theta_z)
         
         self.inner = radius_inner
@@ -183,7 +183,7 @@ class RingBevelT(baseshape.BaseShape):
         self.tickness = tickness
         
         self.bevel_amount = bevel_amount + 2
-        self.bevel_tickness = bevel_tickness
+        self.bevel_tickness = bevel_thickness
 
 
     def initialize(self, orientation=True):
@@ -224,23 +224,49 @@ class RingBevelT(baseshape.BaseShape):
     def generate_triangles(self):
         
         self.triangles = []
+
+        for i in range(self.iter - 1):
+            
+            self.triangles.append(
+                (0 + (self.bevel_amount+2) * i, 
+                 (self.bevel_amount+2) * (i+1), 
+                 (self.bevel_amount+2) * (i+2) - 1))
+            self.triangles.append(
+                (0 + (self.bevel_amount+2) * i, 
+                 (self.bevel_amount+2) * (i+1) - 1, 
+                 (self.bevel_amount+2) * (i+2) - 1))
+            
+            for j in range(self.bevel_amount + 1):
+                
+                self.triangles.append(
+                    (0 + j + (self.bevel_amount+2) * i, 
+                     1 + j + (self.bevel_amount+2) * i, 
+                     j + (self.bevel_amount+2) * (i+1)))
+                self.triangles.append(
+                    (1 + j + (self.bevel_amount+2) * i, 
+                     j + (self.bevel_amount+2) * (i+1), 
+                     j + 1 + (self.bevel_amount+2) * (i+1)))
         
-        self.triangles.append((0, 1, 5))
-        self.triangles.append((1, 5, 6))
+        # self.triangles.append((0, 1, 6))
+        # self.triangles.append((1, 6, 7))
 
-        self.triangles.append((1, 2, 6))
-        self.triangles.append((2, 6, 7))
+        # self.triangles.append((1, 2, 7))
+        # self.triangles.append((2, 7, 8))
 
-        self.triangles.append((2, 3, 7))
-        self.triangles.append((3, 7, 8))
+        # self.triangles.append((2, 3, 8))
+        # self.triangles.append((3, 8, 9))
 
-        self.triangles.append((3, 4, 8))
-        self.triangles.append((4, 8, 9))
+        # self.triangles.append((3, 4, 9))
+        # self.triangles.append((4, 9, 10))
 
-        self.triangles.append((0, 5, 9))
-        self.triangles.append((0, 4, 9))
+        # self.triangles.append((4, 5, 10))
+        # self.triangles.append((5, 10, 11))
 
-        self.triangles = np.array(self.triangles, dtype=np.uint16) % (self.iter*(self.bevel_amount+2))
+        # self.triangles.append((0, 5, 11))
+        # self.triangles.append((0, 6, 11))
+        
+        self.triangles = np.array(self.triangles)
+        # self.triangles = np.array(self.triangles, dtype=np.uint16) % (self.iter*(self.bevel_amount+2))
 
 
 if __name__ == "__main__":

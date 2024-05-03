@@ -77,9 +77,9 @@ class Screen():
             b += math.pi / 356
             c += math.pi / 156
 
-            d -= math.pi / 256
-            e -= math.pi / 356
-            f -= math.pi / 156
+            # d -= math.pi / 256
+            # e -= math.pi / 356
+            # f -= math.pi / 156
 
             # q += 1
             # w += 1

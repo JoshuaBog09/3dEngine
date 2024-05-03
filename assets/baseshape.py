@@ -12,7 +12,7 @@ class BaseShape():
 
         self.theta_x = theta_x
         self.theta_y = theta_y
-        self.theat_z = theta_z
+        self.theta_z = theta_z
 
         self.unit = None
         
@@ -54,4 +54,4 @@ class BaseShape():
         return np.array([self.x, self.y, self.z])
     
     def get_orientation(self):
-        return np.array([self.theta_x, self.theta_y, self.theat_z])
+        return np.array([self.theta_x, self.theta_y, self.theta_z])
