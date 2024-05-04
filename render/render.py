@@ -66,6 +66,18 @@ class Screen():
                 camera.moveUp()
             if keys[pg.K_LSHIFT]:
                 camera.moveDown()
+            if keys[pg.K_w]:
+                camera.positivePitch()
+            if keys[pg.K_s]:
+                camera.negativePitch()
+            if keys[pg.K_a]:
+                camera.positiveYaw()
+            if keys[pg.K_d]:
+                camera.negativeYaw()
+            if keys[pg.K_q]:
+                camera.positiveRoll()
+            if keys[pg.K_e]:
+                camera.negativeRoll()  
             
             # main script
 

@@ -24,6 +24,20 @@ class Camera():
         self.z += 1
     def moveDown(self):
         self.z -= 1
+    
+    def positivePitch(self):
+        self.theta_x += np.pi / 128
+    def negativePitch(self):
+        self.theta_x -= np.pi / 128
+    def positiveRoll(self):
+        self.theta_y += np.pi / 128
+    def negativeRoll(self):
+        self.theta_y -= np.pi / 128
+    def positiveYaw(self):
+        self.theta_z += np.pi / 128
+    def negativeYaw(self):
+        self.theta_z -= np.pi / 128
+
 
     def get_position(self):
         return np.array([self.x, self.y, self.z])
