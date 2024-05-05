@@ -1,4 +1,5 @@
 import numpy as np
+import utility.utils as utils
 
 class Camera():
 
@@ -12,31 +13,57 @@ class Camera():
         self.theta_y = theta_y
         self.theta_z = theta_z
 
+    ## Position
+    # effected by: Roll and Yaw
     def moveRight(self):
-        self.x += 1
+        
+        movement = utils.transform_V2(np.array([1, 0 , 0]), -self.get_orientation())
+        self.x += movement[0]
+        self.y += movement[1]
+        self.z += movement[2]
     def moveLeft(self):
-        self.x -= 1
-    def moveForward(self):
-        self.y += 1
-    def moveBackward(self):
-        self.y -= 1
-    def moveUp(self):
-        self.z += 1
-    def moveDown(self):
-        self.z -= 1
+        movement = utils.transform_V2(np.array([1, 0 , 0]), -self.get_orientation())
+        self.x -= movement[0]
+        self.y -= movement[1]
+        self.z -= movement[2]
     
+    # Effected by: Pitch and Yaw
+    def moveForward(self):
+        movement = utils.transform_V2(np.array([0, 1 , 0]), -self.get_orientation())
+        self.x += movement[0]
+        self.y += movement[1]
+        self.z += movement[2]
+    def moveBackward(self):
+        movement = utils.transform_V2(np.array([0, 1 , 0]), -self.get_orientation())
+        self.x -= movement[0]
+        self.y -= movement[1]
+        self.z -= movement[2]
+    
+    # effected by: Pitch and Roll
+    def moveUp(self):
+        movement = utils.transform_V2(np.array([0, 0 , 1]), -self.get_orientation())
+        self.x += movement[0]
+        self.y += movement[1]
+        self.z += movement[2]
+    def moveDown(self):
+        movement = utils.transform_V2(np.array([0, 0 , 1]), -self.get_orientation())
+        self.x -= movement[0]
+        self.y -= movement[1]
+        self.z -= movement[2]
+    
+    ## Angle changes
     def positivePitch(self):
-        self.theta_x += np.pi / 128
-    def negativePitch(self):
         self.theta_x -= np.pi / 128
+    def negativePitch(self):
+        self.theta_x += np.pi / 128
     def positiveRoll(self):
-        self.theta_y += np.pi / 128
-    def negativeRoll(self):
         self.theta_y -= np.pi / 128
+    def negativeRoll(self):
+        self.theta_y += np.pi / 128
     def positiveYaw(self):
-        self.theta_z += np.pi / 128
-    def negativeYaw(self):
         self.theta_z -= np.pi / 128
+    def negativeYaw(self):
+        self.theta_z += np.pi / 128
 
 
     def get_position(self):
